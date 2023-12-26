@@ -1,7 +1,8 @@
 from main import app, db
 
-class DBEngine():
-    def __init__(self, app, db):
+
+class DBEngine:
+    def __init__(self):
         self.app = app
         self.db = db
 
@@ -11,7 +12,6 @@ class DBEngine():
             for item in items:
                 db.session.add(item)
             db.session.commit()
-            db.create_all()
 
     @staticmethod
     def update():
@@ -21,9 +21,18 @@ class DBEngine():
     @staticmethod
     def reflect():
         with app.app_context():
-            print(db.reflect())
+            return db.reflect()
 
     @staticmethod
     def batch_remove():
         pass
 
+    @staticmethod
+    def dump_all():
+        with app.app_context():
+            db.drop_all()
+            db.session.commit()
+
+    def get_all(cls):
+        with app.app_context():
+            return cls.query.all()

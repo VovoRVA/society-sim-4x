@@ -9,7 +9,7 @@ class AppContext(object):
         raise Exception('call instance()')
 
     @classmethod
-    def app(cls):
+    def get(cls):
         if cls._app is None:
             cls._app = Flask(__name__)
             # more init opration here
@@ -24,17 +24,10 @@ class DbContext(object):
         raise Exception('call instance()')
 
     @classmethod
-    def db(cls):
+    def get(cls):
         if cls._db is None:
             cls._db = SQLAlchemy()
         if cls._app is None:
-            cls._app = AppContext.app()
+            cls._app = AppContext.get()
         return cls._db
 
-    @classmethod
-    def batch_insert(cls, items: list):
-        with cls._app.app_context():
-            for item in items:
-                cls._db.session.add(item)
-            cls._db.session.commit()
-            cls._db.create_all()
